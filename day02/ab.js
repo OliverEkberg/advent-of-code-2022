@@ -1,4 +1,5 @@
 const fs = require('node:fs')
+const _ = require('lodash')
 
 const rows = fs
   .readFileSync('data.txt', 'utf8')
@@ -32,7 +33,7 @@ const beats = {
 }
 
 // reverse beats, needed for part b
-const looses = Object.fromEntries(Object.entries(beats).map((e) => e.reverse()))
+const looses = _.invert(beats)
 
 const calcScore = (strategy) => {
   let total = 0
