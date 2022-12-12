@@ -6,8 +6,8 @@ const grid = fs
   .split('\n')
   .map((r) => r.split(''))
 
-let endRow = null
-let endCol = null
+let ERow = null
+let ECol = null
 let SRow = null
 let SCol = null
 
@@ -15,8 +15,8 @@ for (let row = 0; row < grid.length; row++) {
   for (let col = 0; col < grid[row].length; col++) {
     if (grid[row][col] === 'E') {
       grid[row][col] = 'z'
-      endRow = row
-      endCol = col
+      ERow = row
+      ECol = col
     } else if (grid[row][col] === 'S') {
       grid[row][col] = 'a'
       SRow = row
@@ -64,7 +64,7 @@ const dijkstra = (startRow, startCol) => {
       const toNode = nodes.get(to)
       const fromNode = nodes.get(from)
 
-      if (canMove(grid[fromRow][fromCol], cell) && toNode.distance > fromNode.distance + 1) {
+      if (canMove(cell, grid[fromRow][fromCol]) && toNode.distance > fromNode.distance + 1) {
         toNode.distance = fromNode.distance + 1
         toNode.from = from
 
@@ -82,17 +82,18 @@ const dijkstra = (startRow, startCol) => {
     }
   }
 
-  return nodes.get(toStr(endRow, endCol))?.distance
+  return nodes
 }
 
-console.log('A', dijkstra(SRow, SCol))
+const nodes = dijkstra(ERow, ECol)
+console.log('A', nodes.get(toStr(SRow, SCol)).distance)
 
 let minDistance = Infinity
 
 for (let row = 0; row < grid.length; row++) {
   for (let col = 0; col < grid[row].length; col++) {
     if (grid[row][col] === 'a') {
-      const distance = dijkstra(row, col)
+      const distance = nodes.get(toStr(row, col))?.distance
       if (!distance) continue
       minDistance = Math.min(minDistance, distance)
     }
