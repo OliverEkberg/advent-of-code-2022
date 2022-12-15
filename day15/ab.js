@@ -14,14 +14,6 @@ for (const row of rows) {
   sensors.push([[sx, sy], dist([sx, sy], [bx, by])])
 }
 
-const couldBeBeacon = ([x, y]) => {
-  for (const [coord, distance] of sensors) {
-    if (dist(coord, [x, y]) <= distance) return false
-  }
-
-  return true
-}
-
 // gets the range of x positions given sensor covers at y (or null if none)
 const getRange = ([sx, sy], d, y) => {
   const diff = Math.abs(sy - y)
@@ -77,14 +69,11 @@ for (let y = 0; y <= max; y++) {
   if (ranges.length < 2) continue
 
   for (let i = 1; i < ranges.length; i++) {
-    // gap of exactly 1 => our y is determined
+    // gap of exactly 1 => our y is determined and the gap itself is our x
     if (ranges[i][0] - ranges[i - 1][1] === 2) {
-      for (let x = 0; x <= max; x++) {
-        if (couldBeBeacon([x, y])) {
-          console.log('B', x * 4000000 + y)
-          process.exit(0)
-        }
-      }
+      const x = ranges[i][0] - 1
+      console.log('B', x * 4000000 + y)
+      process.exit(0)
     }
   }
 }
