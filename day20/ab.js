@@ -26,10 +26,8 @@ const sumGroove = (numbers) => {
   let sum = 0
   let startIdx = numbers.findIndex((v) => v.value === 0)
 
-  for (let i = 1; i <= 3000; i++) {
-    if (i % 1000 === 0) {
-      sum += numbers[(startIdx + i) % numbers.length].value
-    }
+  for (const offset of [1000, 2000, 3000]) {
+    sum += numbers[(startIdx + offset) % numbers.length].value
   }
 
   return sum
