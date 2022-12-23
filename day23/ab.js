@@ -75,7 +75,7 @@ while (true) {
 
     if (allDirectionsFree([x, y], ALL_DIRS, state)) continue
 
-    for (let moveIdx = startMoveIdx; moveIdx < startMoveIdx + 4; moveIdx++) {
+    for (let moveIdx = startMoveIdx; moveIdx < startMoveIdx + MOVE_DIRS.length; moveIdx++) {
       const [move, checks] = MOVE_DIRS[moveIdx % MOVE_DIRS.length]
 
       if (allDirectionsFree([x, y], checks, state)) {
