@@ -21,27 +21,42 @@ const snafuToDecimal = (snafuStr) => {
   return val
 }
 
-const decimalToSnafu = (decimal) => {
-  const digitOrder = ['1', '2', '=', '-', '0']
-
+const decimalToBaseFactory = (digitOrder, baseToDecimal) => (decimal) => {
   const digits = []
 
-  let addDigitPoint = '1'
+  let smallestDigitValue = Infinity
+  let smallestDigit = null
+
+  for (const digit of digitOrder) {
+    const decimalValue = baseToDecimal(digit)
+    if (decimalValue < smallestDigitValue) {
+      smallestDigit = digit
+      smallestDigitValue = decimalValue
+    }
+  }
+
+  let addDigitPoint = digitOrder[0]
   let idx = 0
   while (true) {
-    const offset = snafuToDecimal(addDigitPoint)
+    const offset = baseToDecimal(addDigitPoint)
 
     if (decimal < offset) {
       return digits.reverse().join('')
     }
 
-    const digitIdx = Math.floor(((decimal - offset) / 5 ** idx) % 5)
+    const digitIdx = Math.floor(
+      ((decimal - offset) / digitOrder.length ** idx) % digitOrder.length
+    )
     digits.push(digitOrder[digitIdx])
 
-    addDigitPoint += '='
+    addDigitPoint += smallestDigit
     idx++
   }
 }
+
+const decimalToSnafu = decimalToBaseFactory(['1', '2', '=', '-', '0'], (str) =>
+  snafuToDecimal(str)
+)
 
 let sum = 0
 for (const row of rows) {
